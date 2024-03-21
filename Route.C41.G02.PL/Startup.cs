@@ -30,9 +30,10 @@ namespace Route.C41.G02.PL
 			//services.AddScoped<ApplicationDbContext>();
 			//services.AddScoped<DbContextOptions<ApplicationDbContext>>();
 			services.AddDbContext<ApplicationDbContext>(options =>
-			
-			options.UseSqlServer("Server = .; Database = MVCApplicationG02; Trusted_Connection = True; ")
-			);
+			{
+				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+
+			});
 
 
 		}
