@@ -18,11 +18,7 @@ namespace Route.C41.G02.DAL.Data
             
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-		{
-			//optionsBuilder.UseSqlServer("Server = .; Database = MVCApplicationG02; Trusted_Connection = True; ");
-		}
-
+        
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
