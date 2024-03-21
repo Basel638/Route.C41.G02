@@ -18,6 +18,7 @@ namespace Route.C41.G02.DAL.Models
        
         public string Name { get; set; }
 
+        [Display(Name = "Date Of Creation")]
         public DateTime DateOfCreation { get; set; }
 
 
