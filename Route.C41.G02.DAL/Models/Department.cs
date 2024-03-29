@@ -21,6 +21,11 @@ namespace Route.C41.G02.DAL.Models
         [Display(Name = "Date Of Creation")]
         public DateTime DateOfCreation { get; set; }
 
+        
+
+        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>(); 
+
+
 
     }
 }
