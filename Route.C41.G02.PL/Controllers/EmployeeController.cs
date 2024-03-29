@@ -49,8 +49,16 @@ namespace Route.C41.G02.PL.Controllers
             if (ModelState.IsValid) //Server Side Validation
             {
                 var count = _employeesRepo.Add(Employee);
+
+
+                // 3. TempData
                 if (count > 0)
-                    return RedirectToAction(nameof(Index));
+                    TempData["Message"] = "Department is Created Successfully";
+
+                else
+                TempData["Message"] = "An Error Has Occured, Department Not Created :(";
+           
+                return RedirectToAction(nameof(Index));
             }
             return View(Employee);
         }

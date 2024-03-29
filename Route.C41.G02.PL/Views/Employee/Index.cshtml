@@ -8,6 +8,14 @@
 }
 
 
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+	<div>
+		class="alert alert-primary">
+		@TempData["Message"]
+
+	</div>
+}
 @* <div>class ="alert alert-warning"
 
 	@ViewData["Message"]
@@ -39,7 +47,7 @@
 
 		<thead>
 			<tr>
-				
+
 				<th>@Html.DisplayNameFor(D => D.Name)</th>
 				<th>@Html.DisplayNameFor(D => D.Salary)</th>
 				<th>@Html.DisplayNameFor(D => D.IsActive)</th>
@@ -49,7 +57,7 @@
 				<th>@Html.DisplayNameFor(D => D.Age)</th>
 				<th>@Html.DisplayNameFor(D => D.Email)</th>
 
-				
+
 				<th>Details</th>
 				<th>Update</th>
 				<th>Delete</th>
@@ -66,9 +74,9 @@
 					<td>@Html.DisplayFor(M => Employee.IsActive)</td>
 					<td>@Employee.Gender</td>
 					<td>@Html.DisplayFor(M => Employee.Email)</td>
-					
-					<partial name="_ButtonsPartial" model="@Employee.Id"/>
-				</tr> 
+
+					<partial name="_ButtonsPartial" model="@Employee.Id" />
+				</tr>
 			}
 		</tbody>
 	</table>
