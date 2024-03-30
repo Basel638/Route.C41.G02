@@ -4,6 +4,8 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.G02.BLL.Interfaces;
 using Route.C41.G02.DAL.Models;
 using System;
+using System.Linq;
+using System.Reflection.Emit;
 
 namespace Route.C41.G02.PL.Controllers
 {
@@ -24,20 +26,28 @@ namespace Route.C41.G02.PL.Controllers
 
 		// /Employee/Index
 
-		public IActionResult Index()
+		public IActionResult Index(string searchInp)
 		{
+			var employees = Enumerable.Empty<Employee>();
+
+			if(string.IsNullOrEmpty(searchInp))
+				 employees = _employeesRepo.GetAll();
+			else
+				 employees = _employeesRepo.SearchByName(searchInp.ToLower());
+	
+			return View(employees);
+
+
 			//Binding Through View's Dictionary : Transfer Data From Action to View => [One Way] 
 
 			// 1. ViewData
-			ViewData["Message"] = "Hello ViewData";
+			//ViewData["Message"] = "Hello ViewData";
 
 
 			// 2. ViewBag
-			ViewBag.Message = "Hello ViewBag";
+			//ViewBag.Message = "Hello ViewBag";
 
 
-			var Employees = _employeesRepo.GetAll();
-			return View(Employees);
 		}
 
 		public IActionResult Create()
