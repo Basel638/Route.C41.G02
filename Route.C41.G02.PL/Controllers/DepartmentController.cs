@@ -13,23 +13,24 @@ namespace Route.C41.G02.PL.Controllers
     // Association(Composition) : DepartmentController is a DepartmentRepository
     public class DepartmentController : Controller
     {
+		private readonly IUnitOfWork _unitOfWork;
 
-        private IDepartmentRepository _departmentsRepo; //NULL
-        private readonly IWebHostEnvironment _env;
+		//private IDepartmentRepository _departmentsRepo; //NULL
+		private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartmentRepository departmentsRepo, IWebHostEnvironment env) //Ask CLR for Creating an Object from class Imolementing IDepartmentRepository
+        public DepartmentController(IUnitOfWork unitOfWork, IWebHostEnvironment env) //Ask CLR for Creating an Object from class Imolementing IDepartmentRepository
         {
-            /*new DepartmentRepository();*/
+			/*new DepartmentRepository();*/
 
-            _departmentsRepo = departmentsRepo;
-            _env = env;
+			_unitOfWork = unitOfWork;
+			_env = env;
         }
 
         // /Department/Index
 
         public IActionResult Index()
         {
-            var departments = _departmentsRepo.GetAll();
+            var departments = _unitOfWork.Repository<Department>().GetAll();
             return View(departments);
         }
 
@@ -43,7 +44,8 @@ namespace Route.C41.G02.PL.Controllers
         {
             if (ModelState.IsValid) //Server Side Validation
             {
-                var count = _departmentsRepo.Add(department);
+                 _unitOfWork.Repository<Department>().Add(department);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                     return RedirectToAction(nameof(Index));
             }
@@ -57,7 +59,7 @@ namespace Route.C41.G02.PL.Controllers
             if (!id.HasValue)
                 return BadRequest();
 
-            var department = _departmentsRepo.Get(id.Value);
+            var department = _unitOfWork.Repository<Department>().Get(id.Value);
 
             if (department is null)
                 return NotFound();
@@ -92,7 +94,8 @@ namespace Route.C41.G02.PL.Controllers
 
             try
             {
-                _departmentsRepo.Update(department);
+                _unitOfWork.Repository<Department>().Update(department);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -123,7 +126,8 @@ namespace Route.C41.G02.PL.Controllers
             try
             {
 
-                _departmentsRepo.Delete(department);
+                _unitOfWork.Repository<Department>().Delete(department);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
