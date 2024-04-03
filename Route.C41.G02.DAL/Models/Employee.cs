@@ -58,7 +58,9 @@ namespace Route.C41.G02.DAL.Models
 
 		public Department Department { get; set; }
 
+        public string ImageName { get; set; }
 
 
-	}
+
+    }
 }

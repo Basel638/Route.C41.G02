@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Hosting;
-using Route.C41.G02.BLL.Interfaces;
+using  Route.C41.G02.BLL.Interfaces;
 using Route.C41.G02.BLL.Repositories;
 using Route.C41.G02.DAL.Models;
 using System;
@@ -13,12 +13,12 @@ namespace Route.C41.G02.PL.Controllers
     // Association(Composition) : DepartmentController is a DepartmentRepository
     public class DepartmentController : Controller
     {
-		private readonly IUnitOfWork _unitOfWork;
+		private readonly  IUnitOfWork _unitOfWork;
 
 		//private IDepartmentRepository _departmentsRepo; //NULL
 		private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IUnitOfWork unitOfWork, IWebHostEnvironment env) //Ask CLR for Creating an Object from class Imolementing IDepartmentRepository
+        public DepartmentController( IUnitOfWork unitOfWork, IWebHostEnvironment env) //Ask CLR for Creating an Object from class Imolementing IDepartmentRepository
         {
 			/*new DepartmentRepository();*/
 

@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using Route.C41.G02.BLL.Interfaces;
 using Route.C41.G02.BLL.Repositories;
 using Route.C41.G02.DAL.Models;
+using Route.C41.G02.PL.Helpers;
 using Route.C41.G02.PL.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Route.C41.G02.PL.Controllers
 		//private IEmployeeRepository _employeesRepo; //NULL
 		//private readonly IDepartmentRepository _departmentRepository;
 
-		public EmployeeController(IMapper mapper, IEmployeeRepository employeesRepo, IWebHostEnvironment env, IUnitOfWork unitOfWork) //Ask CLR for Creating an Object from class Imolementing IEmployeeRepository
+		public EmployeeController(IMapper mapper, IWebHostEnvironment env, IUnitOfWork unitOfWork) //Ask CLR for Creating an Object from class Imolementing IEmployeeRepository
 		{
 			_mapper = mapper;
 			_env = env;
@@ -73,6 +74,8 @@ namespace Route.C41.G02.PL.Controllers
 		{
 			if (ModelState.IsValid) //Server Side Validation
 			{
+				EmployeeVM.ImageName = DocumentSetting.UploadFile(EmployeeVM.Image, "images");
+
 				// Manual Mapping
 				///var mappedEmp = new Employee()
 				///{
@@ -89,6 +92,7 @@ namespace Route.C41.G02.PL.Controllers
 				//Employee mappedEmp = (Employee)EmployeeVM;
 
 				var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
+				
 				_unitOfWork.Repository<Employee>().Add(mappedEmp);
 
 
@@ -112,7 +116,9 @@ namespace Route.C41.G02.PL.Controllers
 				var count = _unitOfWork.Complete();
 
 				if (count > 0)
+				{
 					return RedirectToAction(nameof(Index));
+				}
 			}
 			return View(EmployeeVM);
 		}
