@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Threading.Tasks;
 
 namespace Route.C41.G02.PL.Controllers
 {
@@ -37,7 +38,7 @@ namespace Route.C41.G02.PL.Controllers
 
 		// /Employee/Index
 
-		public IActionResult Index(string searchInp)
+		public async Task<IActionResult> Index(string searchInp)
 		{
 
 			var employees = Enumerable.Empty<Employee>();
@@ -45,7 +46,7 @@ namespace Route.C41.G02.PL.Controllers
 			var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
 
 			if (string.IsNullOrEmpty(searchInp))
-				employees =employeeRepo.GetAll();
+				employees =await employeeRepo.GetAll();
 			else
 				employees = employeeRepo.SearchByName(searchInp.ToLower());
 
@@ -70,11 +71,11 @@ namespace Route.C41.G02.PL.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Create(EmployeeViewModel EmployeeVM)
+		public async Task<IActionResult> Create(EmployeeViewModel EmployeeVM)
 		{
 			if (ModelState.IsValid) //Server Side Validation
 			{
-				EmployeeVM.ImageName = DocumentSetting.UploadFile(EmployeeVM.Image, "images");
+				EmployeeVM.ImageName =await DocumentSetting.UploadFile(EmployeeVM.Image, "images");
 
 				// Manual Mapping
 				///var mappedEmp = new Employee()
@@ -113,7 +114,7 @@ namespace Route.C41.G02.PL.Controllers
 				//_unitOfWork.Repository<Project>.Remove(project);
 
 
-				var count = _unitOfWork.Complete();
+				var count =await _unitOfWork.Complete();
 
 				if (count > 0)
 				{
@@ -125,12 +126,12 @@ namespace Route.C41.G02.PL.Controllers
 
 		[HttpGet]
 
-		public IActionResult Details(int? id, string viewname = "Details")
+		public async Task<IActionResult> Details(int? id, string viewname = "Details")
 		{
 			if (!id.HasValue)
 				return BadRequest();
 
-			var Employee = _unitOfWork.Repository<Employee>().Get(id.Value);
+			var Employee =await _unitOfWork.Repository<Employee>().Get(id.Value);
 
 			var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(Employee);
 
@@ -143,11 +144,11 @@ namespace Route.C41.G02.PL.Controllers
 			return View(viewname, mappedEmp);
 		}
 
-		public IActionResult Edit(int? id)
+		public async Task<IActionResult> Edit(int? id)
 		{
 			//ViewData["Departments"] = _departmentRepository.GetAll();
 
-			return Details(id);
+			return await Details(id);
 
 			///		if(!id.HasValue)
 			///		return BadRequest();
@@ -163,7 +164,7 @@ namespace Route.C41.G02.PL.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit([FromRoute] int id, Employee Employee, EmployeeViewModel employeeVM)
+		public async Task<IActionResult> Edit([FromRoute] int id, Employee Employee, EmployeeViewModel employeeVM)
 		{
 			if (id != Employee.Id)
 				return BadRequest();
@@ -175,7 +176,7 @@ namespace Route.C41.G02.PL.Controllers
 				var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
 				_unitOfWork.Repository<Employee>().Update(mappedEmp);
-				_unitOfWork.Complete();
+				await _unitOfWork.Complete();
 				return RedirectToAction(nameof(Index));
 			}
 			catch (Exception ex)
@@ -195,24 +196,24 @@ namespace Route.C41.G02.PL.Controllers
 
 		// /Employee/Delete/10
 		[HttpGet]
-		public IActionResult Delete(int? id)
+		public async Task<IActionResult> Delete(int? id)
 		{
 
-			return Details(id, "Delete");
+			return await Details(id, "Delete");
 		}
 
 		[HttpPost]
-		public IActionResult Delete(Employee Employee, EmployeeViewModel employeeVM)
+		public async Task<IActionResult> Delete(Employee Employee, EmployeeViewModel employeeVM)
 		{
 			try
-			{
+			{ 
 
 
 				employeeVM.ImageName = TempData["ImageName"] as string;
 
 				var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 				_unitOfWork.Repository<Employee>().Delete(mappedEmp);
-			var count=	_unitOfWork.Complete();
+			var count=await	_unitOfWork.Complete();
 				if (count > 0)
 				{
 					DocumentSetting.DeleteFile(employeeVM.ImageName, "images");
